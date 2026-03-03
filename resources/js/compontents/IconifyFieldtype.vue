@@ -131,9 +131,21 @@ const result = ref(null);
 const loading = ref(false);
 const queryRef = ref(null);
 
+const configuredCollectionPrefix = computed(() => {
+    const value = `${proxy?.config?.collection ?? ''}`.trim();
+    if (!value) return null;
+
+    return value.endsWith(':') ? value.slice(0, -1) : value;
+});
+
 const icons = computed(() => {
     if (!result.value) return [];
-    return result.value.icons.map(icon => ({
+
+    const prefixedIcons = configuredCollectionPrefix.value
+        ? result.value.icons.filter(icon => icon.startsWith(`${configuredCollectionPrefix.value}:`))
+        : result.value.icons;
+
+    return prefixedIcons.map(icon => ({
         name: icon,
         collection: result.value.collections[icon.split(':')[0]],
     }));
@@ -160,6 +172,9 @@ function search() {
     const url = new URL('https://api.iconify.design/search');
     url.searchParams.set('limit', '999');
     url.searchParams.set('query', query.value);
+    if (configuredCollectionPrefix.value) {
+        url.searchParams.set('prefix', configuredCollectionPrefix.value);
+    }
 
     fetch(url, {
         headers: {

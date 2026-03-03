@@ -44,6 +44,13 @@ class IconifyFieldtype extends Fieldtype
     protected function configFieldItems(): array
     {
         return [
+            'collection' => [
+                'display' => 'Icon Set',
+                'instructions' => 'Optional Iconify set prefix (for example "mdi"). When set, search results are limited this icon set.',
+                'type' => 'text',
+                'placeholder' => 'material-symbols',
+                'width' => 50,
+            ],
             'store_as' => [
                 'display' => 'Store icon as',
                 'instructions' => 'Choose how the selected icon should be stored.',
@@ -53,7 +60,7 @@ class IconifyFieldtype extends Fieldtype
                     'name' => 'Icon name',
                     'svg_data' => 'SVG data',
                 ],
-                'width' => 50
+                'width' => 50,
             ],
         ];
     }
